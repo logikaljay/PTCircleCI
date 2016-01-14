@@ -19,8 +19,8 @@ dependencies:
 
 test:
   pre:
-    - xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.2,name=iPhone 6' -workspace=PTCircleCI.xcworkspace -scheme "PTCircleCI" CONFIGURATION_BUILD_DIR='~/dist/' build
-    - zip -r my_app.zip ~/dist/PTCircleCI.app/
+    - xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination "platform=iOS Simulator,OS=9.2,name=iPhone 6" -workspace=PTCircleCI.xcworkspace -scheme "PTCircleCI" CONFIGURATION_BUILD_DIR="~/dist/" build
+    - zip -r my_app.zip ~/dist/PTCircleCI.app
     - curl -u $SAUCE_USER_NAME:$SAUCE_ACCESS_KEY -X POST "http://saucelabs.com/rest/v1/storage/$SAUCE_USER_NAME/my_app.zip?overwrite=true" -H "Content-Type: application/octet-stream" --data-binary @~/dist/my_app.zip
   override:
     - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready:
