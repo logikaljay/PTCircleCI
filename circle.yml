@@ -22,10 +22,8 @@ test:
         background: true
         pwd: sc-4.3-linux
     - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
-    - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
-        pwd: ~/PTCircleCI/test
+    - cd ~/PTCircleCI/ios/test && "mvn -Dtest=com.ptcircleci.appium.SauceTest test"
   pre: 
-    - "xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=9.2,name=iPhone 6\" -workspace=PTCircleCI.xcworkspace -scheme \"PTCircleCI\" CONFIGURATION_BUILD_DIR=\"~/dist/\" build":
-        pwd: ~/PTCircleCI/ios
-    - "zip -r my_app.zip ~/dist/PTCircleCI.app"
+    - cd ios && "xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=9.2,name=iPhone 6\" -workspace=PTCircleCI.xcworkspace -scheme \"PTCircleCI\" CONFIGURATION_BUILD_DIR=\"~/dist/\" build"
+    - cd ~/ && "zip -r my_app.zip ~/dist/PTCircleCI.app"
     - "curl -u $SAUCE_USER_NAME:$SAUCE_ACCESS_KEY -X POST \"http://saucelabs.com/rest/v1/storage/$SAUCE_USER_NAME/my_app.zip?overwrite=true\" -H \"Content-Type: \"application/octet-stream\" --data-binary @~/dist/my_app.zip"
