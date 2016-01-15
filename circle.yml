@@ -1,4 +1,3 @@
---- 
 dependencies: 
   post: 
     - "wget https://saucelabs.com/downloads/sc-4.3-linux.tar.gz"
@@ -23,7 +22,7 @@ test:
     - "xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=9.2,name=iPhone 6\" -workspace=PTCircleCI.xcworkspace -scheme \"PTCircleCI\" CONFIGURATION_BUILD_DIR=\"~/dist/\" build":
         pwd: ios
     - "zip -r my_app.zip ~/PTCircleCI/ios/dist/PTCircleCI.app"
-    - "curl -u $SAUCE_USER_NAME:$SAUCE_ACCESS_KEY -X POST \"http://saucelabs.com/rest/v1/storage/$SAUCE_USER_NAME/my_app.zip?overwrite=true\" -H \"Content-Type: \"application/octet-stream\" --data-binary @~/my_app.zip"
+    - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST \"http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true\" -H \"Content-Type: \"application/octet-stream\" --data-binary @~/my_app.zip"
 
   override: 
     - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready: 
