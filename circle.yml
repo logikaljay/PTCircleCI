@@ -10,9 +10,13 @@ machine:
     M2: $HOME/.m2/apache-maven-3.1.1/bin/
     M2_HOME: $HOME/.m2/apache-maven-3.1.1/
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
+    
   pre:
     - mkdir -p ~/.m2 
     - "curl -O http://apache.osuosl.org/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && tar xvf apache-maven-3.1.1-bin.tar.gz -C ~/.m2"
+    - mkdir -p $HOME/Downloads/
+    - "curl https://nodejs.org/dist/v4.2.4/node-v4.2.4.pkg > $HOME/Downloads/node-4.2.4.pkg && installer -store -pkg $HOME/Downloads/node-4.2.4.pkg -target /"
+    
   xcode: 
     version: 7.2
 
