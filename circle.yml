@@ -12,8 +12,6 @@ machine:
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
   pre: 
     - "curl -O http://apache.osuosl.org/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && tar xvf apache-maven-3.1.1-bin.tar.gz -C ~/.m2"
-  node: 
-    version: 4.2
   xcode: 
     version: 7.2
 
