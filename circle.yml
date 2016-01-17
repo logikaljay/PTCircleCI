@@ -7,7 +7,6 @@ machine:
   xcode: 
     version: 7.2
     
-dependencies: 
   pre: 
     - "mvn install -f pom.xml -Dmaven.test.skip=true -Dgpg.skip=true":
         pwd: test
@@ -32,3 +31,4 @@ test:
     - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
     - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
         pwd: test
+        background: true
