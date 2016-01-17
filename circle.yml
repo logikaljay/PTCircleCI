@@ -22,7 +22,7 @@ test:
   pre: 
     - "xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=9.2,name=iPhone 6\" -workspace=PTCircleCI.xcworkspace -scheme \"PTCircleCI\" CONFIGURATION_BUILD_DIR=\"~/dist/\" build":
         pwd: ios
-    - "zip -r my_app.zip ~/dist/PTCircleCI.app"
+    - "zip -r ~/my_app.zip ~/dist/PTCircleCI.app"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @~/my_app.zip"
 
   override: 
