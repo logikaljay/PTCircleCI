@@ -1,10 +1,10 @@
 dependencies: 
-  post: 
-    - "wget https://saucelabs.com/downloads/sc-4.3-linux.tar.gz"
-    - "tar -xzf sc-4.3-linux.tar.gz"
   pre: 
     - "mvn install -f pom.xml -Dmaven.test.skip=true -Dgpg.skip=true":
         pwd: test
+  post: 
+    - "curl -O https://saucelabs.com/downloads/sc-4.3-osx.zip"
+    - "tar -xzf sc-4.3-osx.zip"
 machine: 
   environment: 
     M2: $HOME/.m2/apache-maven-3.1.1/bin/
