@@ -42,5 +42,4 @@ deployment:
   hockey:
     branch: master
     commands:
-      - ipa distribute:hockeyapp -m "circleci build" --token $HOCKEYAPP_TOKEN:
-        pwd: ios
+      - ipa distribute:hockeyapp -m "circleci build" --token $HOCKEYAPP_TOKEN
