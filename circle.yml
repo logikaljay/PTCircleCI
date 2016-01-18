@@ -22,7 +22,7 @@ dependencies:
 test: 
   pre: 
     - ./scripts/add-key.sh
-    - ipa build -c Distribution:
+    - ipa build -c Distribution --verbose:
         pwd: ios
     - ./scripts/remove-key.sh
     - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
