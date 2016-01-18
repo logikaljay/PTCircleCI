@@ -22,7 +22,8 @@ dependencies:
 test: 
   pre: 
     - ./scripts/add-key.sh
-    - ipa build -c Distribution
+    - ipa build -c Distribution:
+        pwd: ios
     - ./scripts/remove-key.sh
     - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
@@ -41,4 +42,5 @@ deployment:
   hockey:
     branch: master
     commands:
-      - ipa distribute:hockeyapp -m "circleci build" --token $HOCKEYAPP_TOKEN
+      - ipa distribute:hockeyapp -m "circleci build" --token $HOCKEYAPP_TOKEN:
+        pwd: ios
