@@ -40,7 +40,7 @@ test:
     # Android
     - ./gradlew assembleRelease:
         pwd: android
-    - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F 'ipa=@android/app/build/outputs/apk/app-debug.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
+    - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F 'ipa=@android/app/build/outputs/apk/app-release-unsigned.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
 
   override:
      - echo "done"
