@@ -9,6 +9,7 @@ machine:
 
 dependencies: 
   pre: 
+    # iOS
     - sudo gem install gym
     - "mvn install -f pom.xml -Dmaven.test.skip=true -Dgpg.skip=true":
         pwd: test
@@ -18,9 +19,14 @@ dependencies:
     - "curl https://nodejs.org/dist/v4.2.4/node-v4.2.4.pkg > $HOME/Downloads/node-4.2.4.pkg && sudo installer -store -pkg $HOME/Downloads/node-4.2.4.pkg -target /"
     - "curl -O https://saucelabs.com/downloads/sc-4.3-osx.zip"
     - "tar -xzf sc-4.3-osx.zip"
+    # Android
+    - brew install android-sdk
+    - ANDROID_HOME=/usr/local/opt/android-sdk
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support
 
 test: 
   pre: 
+    # iOS
 #   - unencode keys from ENVVAR and write to file
     - ./scripts/add-key.sh
     - gym --scheme PTCircleCI --export_method ad-hoc -q Distribution:
@@ -31,6 +37,9 @@ test:
     - ./scripts/remove-key.sh
     - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.app.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_APPID/app_versions/upload"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
+    # Android
+    - ./gradlew assembleDebug
+        pwd: android
 
   override:
      - echo "done"
