@@ -684,6 +684,7 @@
 				PROVISIONING_PROFILE = "a0b63503-7cf7-4c2b-95dd-4f9e2095c9fa";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7 armv7s i386";
 			};
 			name = Distribution;
 		};
