@@ -6,7 +6,7 @@ machine:
 
   xcode: 
     version: 7.2
-    
+
 dependencies: 
   pre: 
     - sudo gem install gym
