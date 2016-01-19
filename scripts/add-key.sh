@@ -3,8 +3,8 @@
 KEYCHAIN_PASSWORD=circleci
 
 # base64 decode the keys
-base64 --decode "$PRIVATE_KEY" > ./scripts/dist.p12
-base64 --decode "$PUBLIC_KEY" > ./scripts/dist.cer
+echo $PRIVATE_KEY | base64 --decode > ./scripts/dist.p12
+echo $PUBLIC_KEY base64 --decode > ./scripts/dist.cer
 
 security create-keychain -p $KEYCHAIN_PASSWORD ios-build.keychain
 security import ./scripts/apple.cer -k ~/Library/Keychains/ios-build.keychain -T /usr/bin/codesign
