@@ -3,6 +3,7 @@ machine:
     M2: $HOME/.m2/apache-maven-3.1.1/bin/
     M2_HOME: $HOME/.m2/apache-maven-3.1.1/
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
+    ANDROID_HOME: /usr/local/opt/android-sdk
 
   xcode: 
     version: 7.2
@@ -21,7 +22,6 @@ dependencies:
     - "tar -xzf sc-4.3-osx.zip"
     # Android
     - brew install android-sdk
-    - export ANDROID_HOME=/usr/local/opt/android-sdk
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support
 
 test: 
