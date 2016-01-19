@@ -21,19 +21,21 @@ dependencies:
 
 test: 
   pre: 
+#   - unencode keys from ENVVAR and write to file
     - ./scripts/add-key.sh
     - gym --scheme PTCircleCI --export_method ad-hoc -q Distribution:
         pwd: ios
     - ./scripts/remove-key.sh
+    - "curl -H 'X-HockeyAppToken: $HOCKEYAPP_TOKEN' -F 'ipa=@PTCircleCI.ipa' -F 'dsym=@PTCircleCI.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_APPID/app_versions/upload":
+        pwd: ios
     - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
 
-  override: 
-    
-    - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready: 
-        background: true
-        pwd: sc-4.3-osx
-    - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
-    - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
-        pwd: test
-        background: true
+  override:
+#    - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready: 
+#        background: true
+#        pwd: sc-4.3-osx
+#    - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
+#    - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
+#        pwd: test
+#        background: true
