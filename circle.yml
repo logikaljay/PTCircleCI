@@ -26,7 +26,7 @@ test:
     - gym --scheme PTCircleCI --export_method ad-hoc -q Distribution:
         pwd: ios
     - ./scripts/remove-key.sh
-    - cd ios && "curl -H 'X-HockeyAppToken: $HOCKEYAPP_TOKEN' -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_APPID/app_versions/upload"
+    - "curl -H 'X-HockeyAppToken: $HOCKEYAPP_TOKEN' -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_APPID/app_versions/upload"
     - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
 
