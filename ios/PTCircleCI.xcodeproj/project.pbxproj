@@ -702,7 +702,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PTCircleCI;
-				PROVISIONING_PROFILE = "4b77ef73-124f-41a9-adeb-203cb45e4d18";
+				PROVISIONING_PROFILE = "734b7b46-43c0-4795-8aaa-595431c40939";
 			};
 			name = Distribution;
 		};
