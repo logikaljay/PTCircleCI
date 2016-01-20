@@ -4,7 +4,7 @@ machine:
     M2_HOME: $HOME/.m2/apache-maven-3.1.1/
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
     ANDROID_HOME: /usr/local/opt/android-sdk
-    GIT_COMMIT_DESC: git log --format=oneline -n 1
+    GIT_COMMIT_DESC: $(git log --format=oneline -n 1)
 
   xcode: 
     version: 7.2
