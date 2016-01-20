@@ -38,6 +38,7 @@ test:
     - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.app.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_IOS_APPID/app_versions/upload"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
     # Android
+    - mkdir -p $HOME/.gradle
     - mv gradle.properties.user $HOME/.gradle/gradle.properties:
         pwd: android
     - echo "MYAPP_RELEASE_STORE_PASSWORD=$ANDROID_STORE_PASS" >> $HOME/.gradle/gradle.properties
