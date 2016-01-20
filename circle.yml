@@ -4,7 +4,6 @@ machine:
     M2_HOME: $HOME/.m2/apache-maven-3.1.1/
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
     ANDROID_HOME: /usr/local/opt/android-sdk
-    GIT_COMMIT_DESC: $(cd $HOME; git log --format=oneline -n 1)
 
   xcode: 
     version: 7.2
@@ -37,7 +36,7 @@ test:
         pwd: ios
     - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
     - ./scripts/remove-key.sh
-    - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.app.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_IOS_APPID/app_versions/upload"
+    - "GIT_COMMIT_DESC=git log --format=oneline -n 1; curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.app.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_IOS_APPID/app_versions/upload"
     - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
     # Android
     - mkdir -p $HOME/.gradle
@@ -47,7 +46,7 @@ test:
     - echo "MYAPP_RELEASE_KEY_PASSWORD=$ANDROID_KEY_PASS" >> $HOME/.gradle/gradle.properties
     - ./gradlew assembleRelease:
         pwd: android
-    - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@android/app/build/outputs/apk/app-release.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
+    - "GIT_COMMIT_DESC=git log --format=oneline -n 1; curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@android/app/build/outputs/apk/app-release.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
 
   override:
      - echo "done"
