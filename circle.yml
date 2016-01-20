@@ -23,7 +23,7 @@ dependencies:
     # Android
     - brew install android-sdk
     - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support,extra-android-m2repository
-    - npm install -g react-native-cli
+    - sudo npm install -g react-native-cli
 
 test: 
   pre: 
