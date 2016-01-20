@@ -40,8 +40,8 @@ test:
     # Android
     - mv gradle.properties.user $HOME/.gradle/gradle.properties:
         pwd: android
-    - echo "MYAPP_RELEASE_STORE_PASSWORD=$ANDROID_STORE_PASS" >> $HOME/gradle.properties
-    - echo "MYAPP_RELEASE_KEY_PASSWORD=$ANDROID_KEY_PASS" >> $HOME/gradle.properties
+    - echo "MYAPP_RELEASE_STORE_PASSWORD=$ANDROID_STORE_PASS" >> $HOME/.gradle/gradle.properties
+    - echo "MYAPP_RELEASE_KEY_PASSWORD=$ANDROID_KEY_PASS" >> $HOME/.gradle/gradle.properties
     - ./gradlew assembleRelease:
         pwd: android
     - "curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F 'ipa=@android/app/build/outputs/apk/app-release.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
