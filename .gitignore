@@ -39,4 +39,5 @@ test/target/
 
 # build
 #
+*.dSYM.zip
 ios/dist/

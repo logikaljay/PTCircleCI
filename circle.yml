@@ -1,34 +1,63 @@
---- 
-dependencies: 
-  post: 
-    - "wget https://saucelabs.com/downloads/sc-4.3-linux.tar.gz"
-    - "tar -xzf sc-4.3-linux.tar.gz"
-  pre: 
-    - "mvn install -f pom.xml -Dmaven.test.skip=true -Dgpg.skip=true":
-        pwd: test
 machine: 
   environment: 
     M2: $HOME/.m2/apache-maven-3.1.1/bin/
     M2_HOME: $HOME/.m2/apache-maven-3.1.1/
     PATH: "$HOME/.m2/apache-maven-3.1.1/bin:$PATH"
-  pre: 
-    - "curl -O http://apache.osuosl.org/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && tar xvf apache-maven-3.1.1-bin.tar.gz -C ~/.m2"
-  node: 
-    version: 4.2
+    ANDROID_HOME: /usr/local/opt/android-sdk
+
   xcode: 
     version: 7.2
 
+dependencies: 
+  pre: 
+    # iOS
+    - sudo gem install gym
+    - "mvn install -f pom.xml -Dmaven.test.skip=true -Dgpg.skip=true":
+        pwd: test
+    - mkdir -p ~/.m2 
+    - "curl -O http://apache.osuosl.org/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz && tar xvf apache-maven-3.1.1-bin.tar.gz -C ~/.m2"
+    - mkdir -p $HOME/Downloads/
+    - "curl https://nodejs.org/dist/v4.2.4/node-v4.2.4.pkg > $HOME/Downloads/node-4.2.4.pkg && sudo installer -store -pkg $HOME/Downloads/node-4.2.4.pkg -target /"
+    - "curl -O https://saucelabs.com/downloads/sc-4.3-osx.zip"
+    - "tar -xzf sc-4.3-osx.zip"
+    # Android
+    - brew install android-sdk
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support,extra-android-m2repository
+    - sudo npm install -g react-native-cli
+
 test: 
   pre: 
+    # iOS
+#   - unencode keys from ENVVAR and write to file
+    - ./scripts/add-key.sh
+    - gym --scheme PTCircleCI --export_method ad-hoc -q Distribution:
+        pwd: ios
     - "xcodebuild CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= -sdk iphonesimulator -destination \"platform=iOS Simulator,OS=9.2,name=iPhone 6\" -workspace=PTCircleCI.xcworkspace -scheme \"PTCircleCI\" CONFIGURATION_BUILD_DIR=\"~/dist/\" build":
         pwd: ios
-    - "zip -r my_app.zip ~/PTCircleCI/ios/dist/PTCircleCI.app"
-    - "curl -u $SAUCE_USER_NAME:$SAUCE_ACCESS_KEY -X POST \"http://saucelabs.com/rest/v1/storage/$SAUCE_USER_NAME/my_app.zip?overwrite=true\" -H \"Content-Type: \"application/octet-stream\" --data-binary @~/my_app.zip"
+    - "zip -r $HOME/my_app.zip ~/dist/PTCircleCI.app"
+    - ./scripts/remove-key.sh
+    - "GIT_COMMIT_DESC=$(git log --format=oneline -n 1); curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@ios/PTCircleCI.ipa' -F 'dsym=@ios/PTCircleCI.app.dSYM.zip' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_IOS_APPID/app_versions/upload"
+    - "curl -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -X POST http://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/my_app.zip?overwrite=true -H 'Content-Type: application/octet-stream' --data-binary @$HOME/my_app.zip"
+    # Android
+    - mkdir -p $HOME/.gradle
+    - mv gradle.properties.user $HOME/.gradle/gradle.properties:
+        pwd: android
+    - echo "MYAPP_RELEASE_STORE_PASSWORD=$ANDROID_STORE_PASS" >> $HOME/.gradle/gradle.properties
+    - echo "MYAPP_RELEASE_KEY_PASSWORD=$ANDROID_KEY_PASS" >> $HOME/.gradle/gradle.properties
+    - ./gradlew assembleRelease:
+        pwd: android
+    - "GIT_COMMIT_DESC=$(git log --format=oneline -n 1); curl -H \"X-HockeyAppToken: $HOCKEYAPP_TOKEN\" -F 'notify=1' -F 'status=2' -F \"notes=$GIT_COMMIT_DESC\" -F 'ipa=@android/app/build/outputs/apk/app-release.apk' https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPP_ANDROID_APPID/app_versions/upload"
 
-  override: 
-    - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready: 
-        background: true
-        pwd: sc-4.3-linux
-    - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
-    - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
-        pwd: test
+  override:
+     - echo "done"
+#    - ./bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -f ~/sc_ready: 
+#        background: true
+#        pwd: sc-4.3-osx
+#    - "while [ ! -e ~/sc_ready ]; do sleep 1; done"
+#    - "mvn -Dtest=com.ptcircleci.appium.SauceTest test":
+#        pwd: test
+#        background: true
+
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
